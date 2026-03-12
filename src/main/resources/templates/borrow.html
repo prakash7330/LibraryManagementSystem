@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Borrow & Return - Library Management System</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand">📚 Library Management System</div>
+        <ul class="nav-links">
+            <li><a th:href="@{/}">🏠 Home</a></li>
+            <li><a th:href="@{/books}">📖 Books</a></li>
+            <li><a th:href="@{/members}">👥 Members</a></li>
+            <li><a th:href="@{/borrow}" class="active">🔄 Borrow/Return</a></li>
+        </ul>
+    </nav>
+
+    <div class="page-container">
+        <div class="page-header">
+            <h1>🔄 Borrow & Return Books</h1>
+            <p>Issue books to members and track returns</p>
+        </div>
+
+        <!-- Error Messages -->
+        <div th:if="${param.error == 'notavailable'}" class="info-box">
+            ❌ Sorry! This book is not available right now.
+        </div>
+        <div th:if="${param.error == 'alreadyborrowed'}" class="info-box">
+            ❌ This member has already borrowed this book!
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="two-col-grid">
+
+            <!-- Borrow Form -->
+            <div class="card">
+                <div class="card-header green-header">
+                    <h2>📤 Borrow a Book</h2>
+                </div>
+                <div class="card-body">
+                    <form action="/borrow/add" method="post">
+                        <div class="form-group">
+                            <label>Select Book *</label>
+                            <select name="bookId" required>
+                                <option value="">-- Select Book --</option>
+                                <option th:each="book : ${books}"
+                                        th:value="${book.id}"
+                                        th:text="${book.title} + ' (Available: ' + ${book.available} + ')'">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Select Member *</label>
+                            <select name="memberId" required>
+                                <option value="">-- Select Member --</option>
+                                <option th:each="member : ${members}"
+                                        th:value="${member.id}"
+                                        th:text="${member.name}">
+                                </option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary full-width">📤 Issue Book</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Active Borrows -->
+            <div class="card">
+                <div class="card-header orange-header">
+                    <h2>📋 Currently Borrowed</h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Book</th>
+                                    <th>Member</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="record : ${activeRecords}">
+                                    <td th:text="${record.book.title}"></td>
+                                    <td th:text="${record.member.name}"></td>
+                                    <td th:text="${record.borrowDate}"></td>
+                                    <td>
+                                        <a th:href="@{/borrow/return/{id}(id=${record.id})}"
+                                           class="btn btn-sm btn-primary"
+                                           onclick="return confirm('Return this book?')">↩️ Return</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- All Borrow History -->
+        <div class="card">
+            <div class="card-header">
+                <h2>🗂️ Borrow History</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Book</th>
+                                <th>Member</th>
+                                <th>Borrow Date</th>
+                                <th>Return Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="record : ${allRecords}">
+                                <td th:text="${record.id}"></td>
+                                <td th:text="${record.book.title}"></td>
+                                <td th:text="${record.member.name}"></td>
+                                <td th:text="${record.borrowDate}"></td>
+                                <td th:text="${record.returnDate != null ? record.returnDate : '-'}"></td>
+                                <td>
+                                    <span th:class="${record.status == 'borrowed'} ? 'badge badge-warning' : 'badge badge-success'"
+                                          th:text="${record.status}"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>📚 Library Management System | Spring Boot + MySQL | 2025</p>
+    </footer>
+
+</body>
+</html>

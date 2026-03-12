@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Library Management System</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand">📚 Library Management System</div>
+        <ul class="nav-links">
+            <li><a th:href="@{/}" class="active">🏠 Home</a></li>
+            <li><a th:href="@{/books}">📖 Books</a></li>
+            <li><a th:href="@{/members}">👥 Members</a></li>
+            <li><a th:href="@{/borrow}">🔄 Borrow/Return</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to Library Management System</h1>
+            <p>Manage books, members, and borrowing records all in one place.</p>
+            <div class="hero-buttons">
+                <a th:href="@{/books}" class="btn btn-secondary">📖 Manage Books</a>
+                <a th:href="@{/members}" class="btn btn-secondary">👥 Manage Members</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <h2>Quick Overview</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📚</div>
+                <div class="stat-number" th:text="${totalBooks}">0</div>
+                <div class="stat-label">Total Books</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-number" th:text="${totalMembers}">0</div>
+                <div class="stat-label">Members</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔄</div>
+                <div class="stat-number" th:text="${totalBorrowed}">0</div>
+                <div class="stat-label">Books Borrowed</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <h2>Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📖</div>
+                <h3>Book Management</h3>
+                <p>Add, update, search and delete books from the library collection.</p>
+                <a th:href="@{/books}" class="feature-link">Go to Books →</a>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👤</div>
+                <h3>Member Management</h3>
+                <p>Register new members and manage membership records.</p>
+                <a th:href="@{/members}" class="feature-link">Go to Members →</a>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>Borrow & Return</h3>
+                <p>Issue books to members and track returns with dates.</p>
+                <a th:href="@{/borrow}" class="feature-link">Go to Borrow →</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>📚 Library Management System | Spring Boot + MySQL | 2025</p>
+    </footer>
+
+</body>
+</html>

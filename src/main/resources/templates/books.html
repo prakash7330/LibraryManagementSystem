@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Books - Library Management System</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand">📚 Library Management System</div>
+        <ul class="nav-links">
+            <li><a th:href="@{/}">🏠 Home</a></li>
+            <li><a th:href="@{/books}" class="active">📖 Books</a></li>
+            <li><a th:href="@{/members}">👥 Members</a></li>
+            <li><a th:href="@{/borrow}">🔄 Borrow/Return</a></li>
+        </ul>
+    </nav>
+
+    <div class="page-container">
+        <div class="page-header">
+            <h1>📖 Book Management</h1>
+        </div>
+
+        <!-- Error Message -->
+        <div th:if="${error}" class="info-box" th:text="${error}"></div>
+
+        <!-- Add Book Form -->
+        <div class="card">
+            <div class="card-header"><h2>➕ Add New Book</h2></div>
+            <div class="card-body">
+                <form action="/books/add" method="post" class="form-grid">
+                    <div class="form-group">
+                        <label>Title *</label>
+                        <input type="text" name="title" placeholder="Enter book title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Author *</label>
+                        <input type="text" name="author" placeholder="Enter author" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity *</label>
+                        <input type="number" name="quantity" placeholder="Enter quantity" min="1" required>
+                    </div>
+                    <div class="form-group form-btn-group">
+                        <button type="submit" class="btn btn-primary">Add Book</button>
+                        <button type="reset" class="btn btn-outline">Clear</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Edit Book Form (shows only when editing) -->
+        <div class="card" th:if="${book != null}">
+            <div class="card-header green-header"><h2>✏️ Edit Book</h2></div>
+            <div class="card-body">
+                <form action="/books/update" method="post" class="form-grid">
+                    <input type="hidden" name="id" th:value="${book.id}">
+                    <div class="form-group">
+                        <label>Title *</label>
+                        <input type="text" name="title" th:value="${book.title}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Author *</label>
+                        <input type="text" name="author" th:value="${book.author}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity *</label>
+                        <input type="number" name="quantity" th:value="${book.quantity}" min="1" required>
+                    </div>
+                    <div class="form-group form-btn-group">
+                        <button type="submit" class="btn btn-primary">Update Book</button>
+                        <a th:href="@{/books}" class="btn btn-outline">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+<!-- Search Bar -->
+<div class="card">
+    <div class="card-body">
+        <form action="/books" method="get" 
+              style="display:flex; gap:10px; align-items:center; max-width:600px; margin:2 auto;">
+            <input type="text" name="keyword"
+                   th:value="${keyword}"
+                   placeholder="🔍 Search by title or author..."
+                   class="search-input"
+                   style="flex:1; margin:0;">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a th:href="@{/books}" class="btn btn-outline">Clear</a>
+        </form>
+    </div>
+</div>
+
+
+        <!-- Books Table -->
+        <div class="card">
+            <div class="card-header">
+                <h2>📚 All Books</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Quantity</th>
+                                <th>Available</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="book : ${books}">
+                                <td th:text="${book.id}"></td>
+                                <td th:text="${book.title}"></td>
+                                <td th:text="${book.author}"></td>
+                                <td th:text="${book.quantity}"></td>
+                                <td th:text="${book.available}"></td>
+                                <td>
+                                    <a th:href="@{/books/edit/{id}(id=${book.id})}"
+                                       class="btn btn-sm btn-primary">✏️ Edit</a>
+                                    <a th:href="@{/books/delete/{id}(id=${book.id})}"
+                                       class="btn btn-sm btn-warning"
+                                       onclick="return confirm('Delete this book?')">🗑️ Delete</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>📚 Library Management System | Spring Boot + MySQL | 2025</p>
+    </footer>
+
+</body>
+</html>
